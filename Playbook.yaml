@@ -69,7 +69,6 @@
         dest: "/usr/local/bin/docker-compose"
         mode: 'u+x,g+x'
 
-    - name: Configuring docker daemon
 
     - name: Deploying docker-compose in /etc/demo-ops and other files from github
       ansible.builtin.copy:
