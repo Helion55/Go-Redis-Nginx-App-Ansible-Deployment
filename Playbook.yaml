@@ -1,0 +1,90 @@
+---
+- hosts: demo-ops
+  become: yes
+  tasks:
+
+    - name: Adding user demo
+      ansible.builtin.command: adduser demo
+    - name: Disabling root login
+      lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: "PermitRootLogin"
+        line: "PermitRootLogin no"
+        backup: yes
+      notify: "restart sshd"
+
+      
+
+    - name: Setingup firewall to open only ports- 22,80,6379,8080
+      community.general.ufw:
+        state: "enabled"
+        policy: "deny"
+        rule: "allow"
+        port:
+            - "80"
+            - "22"
+            - "8080"
+            - "6379"
+
+    - name: Configuring sysctl to increase open file limits
+      ansible.posix.sysctl:
+        name: "dev.cdrom.lock"
+        value: "1"
+        state: present
+        sysctl_set: true
+        reload: true
+        ansible.posix.sysctl:
+         name: "vm.swappiness"
+         value: "50"
+         state: present
+         sysctl_set: true
+         reload: true
+
+      community.general.pam_limits:
+        domain: vagrant
+        limit_type: soft
+        limit_item: nofile
+        value: 64000
+
+
+    - name: Setting systems time zone to asia/kolkata
+      timezone:
+        name: Asia/Kolkata
+
+    - name: Installing docker 
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu trusty stable"
+        state: present
+        filename: docker
+
+
+      ansible.builtin.apt:
+        name: "docker"
+        state: latest
+        update_cache: true
+
+    - name: Installing docker-compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
+        dest: "/usr/local/bin/docker-compose"
+        mode: 'u+x,g+x'
+
+    - name: Configuring docker daemon
+
+    - name: Deploying docker-compose in /etc/demo-ops and other files from github
+      ansible.builtin.copy:
+        src: /home/user/Documents/vagrant/{{ item }}
+        dest: /etc/demo-ops
+        mode: 'u+x,g+x'
+      items:
+        - "Dockerfile"
+        - "docker-compose.yaml"
+
+
+    - name: Running the services
+      community.docker.docker_compose:
+        project_src: /etc/demo-ops
+        files:
+          - docker-compose.yml
+
+

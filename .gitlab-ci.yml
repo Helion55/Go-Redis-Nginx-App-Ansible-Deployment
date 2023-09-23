@@ -1,0 +1,11 @@
+stages:
+  - "build"
+
+building:
+  stage: build
+  image: golang:1.21.1
+  before_script:
+    - apt-get update && apt-get install make
+  script:
+    - make build
+
