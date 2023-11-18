@@ -1,17 +1,24 @@
-version: "3"
 services:
-  demoapp:
-    build: .
-    depends_on:
-      - server
-      - database
-  
-  database:
-    image: redis:latest
-  
-  server:
+ demoapp:
+  build: .
+
+ database:
+  image: redis:latest
+  container_name: redis
+  volumes:
+   - redis_data:/data
+  ports:
+   - 127.0.0.1:6379:6379
+    
+ server:
     image: nginx:latest
+    container_name: nginx
     volumes:
-      - ./conf:/etc/nginx/conf.d/default.conf
+      - ./conf:/etc/nginx/conf.d
     ports:
-      - "80:80"
+      - 127.0.0.1:80:80
+    restart: always
+
+
+volumes:
+ redis_data:
