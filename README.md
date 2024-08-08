@@ -62,3 +62,7 @@ to ssh into system and get the ip
  - Installing docker
  - Deploying docker-compose 
  - Running the services
+5. Finnaly executing the playbook by running...
+```
+ansible-playbook playbook.yaml
+```
