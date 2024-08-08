@@ -70,9 +70,9 @@
         mode: 'u+x,g+x'
 
 
-    - name: Deploying docker-compose in /etc/demo-ops and other files from github
+    - name: Deploying docker-compose 
       ansible.builtin.copy:
-        src: /home/user/Documents/vagrant/{{ item }}
+        src: /MY-FILE-LOCATION/{{ item }}
         dest: /etc/demo-ops
         mode: 'u+x,g+x'
       items:
