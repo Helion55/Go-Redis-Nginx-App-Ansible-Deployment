@@ -1,4 +1,7 @@
 # Dockerizing Number Counting Application
+
+![Diagram](https://github.com/Helion55/Dockerizing-Number-Counter-Application/blob/main/Dockerizing-Number-Counter-Application.jpg?raw=true)
+
 A number counting application made with GO, running on port 8080, using Redis a database and Nginx as reverse proxy. This Project is about creating an image of the Application and Running that with Docker Compose on Vagrant Machine configured with Ansible. I have configured Nginx as reverse proxy and passing the config file on docker compose, pulling the Redis Image and connecting all together to run the whole Application Stack. Vagrant is used to create the Virtual Machine where our application is deployed using Ansible playbook.
 
 ## Tech Stack
